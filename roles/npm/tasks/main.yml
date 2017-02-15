@@ -1,0 +1,61 @@
+---
+- name: check nvm
+  stat:
+    path: "{{ ansible_user_dir }}/.nvm/nvm.sh"
+  register: nvm
+
+- block:
+
+  - name: download nvm installer
+    get_url:
+      url: https://raw.githubusercontent.com/creationix/nvm/v{{ versions.nvm }}/install.sh
+      dest: /tmp/nvm-{{ versions.nvm }}-install.sh
+
+  - name: install nvm
+    script: /tmp/nvm-{{ versions.nvm }}-install.sh
+
+  - name: install npm
+    shell: /bin/bash -c "source {{ ansible_user_dir }}/.nvm/nvm.sh && nvm install {{ versions.npm }}"
+    args:
+      creates: "{{ ansible_user_dir }}/.nvm/versions/node/v{{ versions.npm }}/bin/node"
+
+  when: not nvm.stat.exists
+
+- name: install npmrc
+  npm:
+    name: "{{ item }}"
+    executable: "{{ ansible_user_dir }}/.nvm/versions/node/v{{ versions.npm }}/bin/npm"
+    global: yes
+    state: latest
+  with_items:
+    - npmrc
+  environment:
+    NVM_DIR: /var/local/nvm
+    PATH: "{{ ansible_user_dir }}/.nvm/versions/node/v{{ versions.npm }}/bin:{{ ansible_env.PATH }}"
+
+
+- block:
+
+  - name: add yarn apt key
+    apt_key:
+      url: https://dl.yarnpkg.com/debian/pubkey.gpg
+      state: present
+    register: yarn_apt_key
+
+  - name: add yarn apt repository
+    apt_repository:
+      repo: deb https://dl.yarnpkg.com/debian/ stable main
+      state: present
+    register: yarn_apt_repository
+
+  - name: update apt-cache
+    apt:
+      update_cache: yes
+    when: yarn_apt_key.changed or yarn_apt_repository.changed
+
+  - name: install yarn
+    apt:
+      name: yarn
+      state: latest
+
+  become: yes

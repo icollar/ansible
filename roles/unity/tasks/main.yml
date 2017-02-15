@@ -1,0 +1,72 @@
+---
+- name: get launcher mode
+  command: gsettings get org.compiz.unityshell:/org/compiz/profiles/unity/plugins/unityshell/ launcher-hide-mode
+  register: launcher
+  changed_when: 0
+
+- name: get vsize
+  command: gsettings get org.compiz.core:/org/compiz/profiles/unity/plugins/core/ vsize
+  register: vsize
+  changed_when: 0
+
+- name: get hsize
+  command: gsettings get org.compiz.core:/org/compiz/profiles/unity/plugins/core/ hsize
+  register: hsize
+  changed_when: 0
+
+- name: get time format
+  command: gsettings get com.canonical.indicator.datetime time-format
+  register: time_format
+  changed_when: 0
+
+- name: get custom time format
+  command: gsettings get com.canonical.indicator.datetime custom-time-format
+  register: custom_time_format
+  changed_when: 0
+
+- name: get launcher favorites
+  command: gsettings get com.canonical.Unity.Launcher favorites
+  register: favorites
+  changed_when: 0
+
+- name: get dash scopes
+  command: gsettings get com.canonical.Unity.Dash scopes
+  register: scopes
+  changed_when: 0
+
+- name: get lense remote search
+  command: gsettings get com.canonical.Unity.Lenses remote-content-search
+  register: remote_content_search
+  changed_when: 0
+
+- name: set launcher mode
+  command: gsettings set org.compiz.unityshell:/org/compiz/profiles/unity/plugins/unityshell/ launcher-hide-mode {{ unity.launcher }}
+  when: launcher.stdout != "{{ unity.launcher }}"
+
+- name: set vsize
+  command: gsettings set org.compiz.core:/org/compiz/profiles/unity/plugins/core/ vsize {{ unity.vsize }}
+  when: vsize.stdout != "{{ unity.vsize }}"
+
+- name: set hsize
+  command: gsettings set org.compiz.core:/org/compiz/profiles/unity/plugins/core/ hsize {{ unity.hsize }}
+  when: hsize.stdout != "{{ unity.hsize }}"
+
+- name: set time format
+  command: gsettings set com.canonical.indicator.datetime time-format {{ unity.time_format }}
+  when: time_format.stdout != "{{ unity.time_format }}"
+
+- name: set custom time format
+  command: gsettings set com.canonical.indicator.datetime custom-time-format {{ unity.custom_time_format }}
+  when: custom_time_format.stdout != "{{ unity.custom_time_format }}"
+
+- name: set launcher favorites
+  shell: gsettings set com.canonical.Unity.Launcher favorites "{{ unity.favorites }}"
+  when: favorites.stdout != "{{ unity.favorites }}"
+
+- name: set dash scopes
+  command: gsettings set com.canonical.Unity.Dash scopes "{{ unity.scopes }}"
+  when: scopes.stdout != "{{ unity.scopes }}"
+
+- name: set lense remote search
+  command: gsettings set com.canonical.Unity.Lenses remote-content-search {{ unity.remote_content_search }}
+  when: remote_content_search.stdout != "{{ unity.remote_content_search }}"

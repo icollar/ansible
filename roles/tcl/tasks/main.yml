@@ -1,0 +1,46 @@
+---
+- name: install utils
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ utils }}"
+
+- name: chown /opt
+  become: yes
+  file:
+    path: /opt
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+
+- name: git yajl-tcl
+  git:
+    repo: https://github.com/flightaware/yajl-tcl.git
+    dest: /opt/yajl-tcl
+  register: yajl
+
+- block:
+
+    - name: yajl-tcl autoconf
+      command: autoconf
+      args:
+          chdir: /opt/yajl-tcl
+
+    - name: yajl-tcl configure
+      command: ./configure
+      args:
+          chdir: /opt/yajl-tcl
+
+    - name: yajl-tcl make
+      command: make
+      args:
+          chdir: /opt/yajl-tcl
+
+    - name: yajl-tcl install
+      become: yes
+      command: make install
+      args:
+          chdir: /opt/yajl-tcl
+
+  when: yajl.changed
+

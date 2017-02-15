@@ -1,0 +1,11 @@
+---
+unity:
+  launcher: 1
+  vsize: 3
+  hsize: 3
+  time_format: "'custom'"
+  custom_time_format: "'%A, %B %e %T'"
+  favorites: "['unity://running-apps', 'application://evolution.desktop', 'unity://devices']"
+  scopes: "['applications.scope']"
+  remote_content_search: "'none'"
+

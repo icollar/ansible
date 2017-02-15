@@ -1,0 +1,35 @@
+---
+utils:
+  - curl
+  - wget
+  - time
+  - tree
+  - git
+  - cvs
+  - meld
+  - ssh
+  - sshpass
+  - vim
+  - xclip
+  - tidy
+  - rlwrap
+  - xdotool
+  - wmctrl
+  - tcllib
+  - tdom
+  - tcl-tls
+  - tclxml
+  - tclxml-dev
+  - tcl-dev
+  - autoconf
+  - libyajl-dev
+  - libxml2-utils
+  - rpm
+  - unity-tweak-tool
+  - sqlite3
+  - libsqlite3-dev
+  - apache2
+  - libapache2-mod-php
+  - php-mcrypt
+  - php-curl
+  - indicator-multiload

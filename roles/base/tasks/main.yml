@@ -1,0 +1,58 @@
+---
+- name: ubuntu cleanup
+  file:
+    path: "{{ ansible_user_dir }}/{{ item }}"
+    state: absent
+  with_items:
+    - examples.desktop
+    - Music
+    - Pictures
+    - Public
+    - Templates
+    - Videos
+
+- name: create dirs
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+  with_items:
+    - "{{ ansible_user_dir }}/code"
+    - "{{ ansible_user_dir }}/dev"
+
+- name: copy aliases
+  copy:
+    src: bash_aliases
+    dest: "{{ ansible_user_dir }}/.bash_aliases"
+
+- name: copy
+  copy:
+    src: terminal.dconf
+    dest: "{{ ansible_user_dir }}/.{{ item.src }}"
+  with_items: "{{ profiles }}"
+
+- name: load terminal profiles
+  debug:
+    msg: "dconf load /org/gnome/terminal/legacy/profiles:/:{{ item.uuid }}/ < {{ ansible_user_dir }}/.{{ item.src }}"
+  with_items: "{{ profiles }}"
+
+
+- name: add sudoers file
+  become: yes
+  template:
+    src: sudoers.j2
+    dest: "/etc/sudoers.d/{{ ansible_user_id }}"
+    mode: 0440
+
+- name: copy gitconfig
+  copy:
+    src: gitconfig
+    dest: "{{ ansible_user_dir }}/.gitconfig"
+
+- name: copy omegaswitcher profile
+  copy:
+    src: OmegaOptions.bak
+    dest: "{{ ansible_user_dir }}/Downloads/OmegaOptions.bak"
+
+# vim:ft=ansible

@@ -1,0 +1,64 @@
+---
+- block:
+
+    - name: add ppa
+      apt_repository:
+        repo: ppa:webupd8team/java
+      register: ppa
+
+    - name: update apt-cache
+      apt:
+        update_cache: yes
+      when: ppa.changed
+
+    - name: check license
+      action: shell echo GET shared/accepted-oracle-license-v1-1 | debconf-communicate oracle-java8-installer
+      register: java8accepted
+      changed_when: java8accepted.stdout != "0 true"
+      ignore_errors: yes
+
+    - name: autoaccept license
+      action: shell echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+      when: java8accepted.changed
+
+    - name: install
+      apt:
+        name: oracle-java8-installer
+        state: latest
+
+  become: yes
+
+
+- name: check maven exists
+  stat:
+    path: /usr/bin/mvn
+  register: mvn
+
+- block:
+    - name: download maven
+      get_url:
+        url: "https://archive.apache.org/dist/maven/maven-3/{{ maven.version }}/binaries/apache-maven-{{ maven.version }}-bin.tar.gz"
+        dest: "/tmp/apache-maven-{{ maven.version }}-bin.tar.gz"
+
+    - name: extract maven
+      become: yes
+      unarchive:
+        src: "/tmp/apache-maven-{{ maven.version }}-bin.tar.gz"
+        dest: /usr/local
+
+    - name: link maven
+      become: yes
+      file:
+        src: "/usr/local/apache-maven-{{ maven.version }}/bin/mvn"
+        dest: /usr/bin/mvn
+        state: link
+
+  become: yes
+  when: not mvn.stat.exists
+
+- name: add maven autocomplete
+  get_url:
+    url: https://raw.github.com/dimaj/maven-bash-completion/master/bash_completion.bash
+    dest: /etc/bash_completion.d/mvn
+  become: yes
+

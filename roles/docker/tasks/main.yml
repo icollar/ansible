@@ -1,0 +1,45 @@
+---
+- block:
+
+  - name: add apt key
+    apt_key:
+      url: https://apt.dockerproject.org/gpg
+      state: present
+    register: apt_key
+
+  - name: add apt repository
+    apt_repository:
+      repo: deb https://apt.dockerproject.org/repo/ ubuntu-xenial main
+      state: present
+    register: apt_repo
+
+  - name: update apt-cache
+    apt:
+      update_cache: yes
+    when: apt_key.changed or apt_repo.changed
+
+  - name: install dependencies
+    become: yes
+    apt:
+      name: "{{ item }}"
+      state: latest
+    with_items: "{{ dependency.apt }}"
+
+  - name: add group
+    group:
+      name: docker
+      state: present
+
+  - name: add user to group
+    user:
+      name: "{{ ansible_user_id }}"
+      groups: docker
+      append: yes
+
+  - name: get compose
+    get_url:
+      url: "https://github.com/docker/compose/releases/download/{{ compose.version }}/docker-compose-Linux-x86_64"
+      dest: /usr/local/bin/docker-compose
+      mode: 0755
+
+  become: yes

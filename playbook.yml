@@ -1,0 +1,14 @@
+---
+- name: Development
+  hosts: localhost
+  roles:
+    - utils
+    - vim
+    - base
+    - unity
+    - chrome
+    - python
+    - java
+    - npm
+    - tcl
+    - docker

@@ -1,0 +1,31 @@
+---
+- name: install vim
+  become: yes
+  apt:
+    name: vim
+    state: latest
+
+- name: copy vimrc
+  copy:
+    src: vimrc
+    dest: "{{ ansible_user_dir }}/.vimrc"
+    owner: "{{ ansible_user_id }}"
+    mode: 0644
+    backup: yes
+  register: vim
+
+- name: cleanup .vim
+  file:
+    path: "{{ ansible_user_dir }}/.vim"
+    state: absent
+  when: vim.changed
+
+- name: clone powerline font
+  git:
+    repo: https://github.com/Lokaltog/powerline-fonts
+    dest: "{{ ansible_user_dir }}/.fonts/powerline-fonts"
+  register: font
+
+- name: install powerline font
+  command: fc-cache -vf ~/.fonts/powerline-fonts
+  when: font.changed

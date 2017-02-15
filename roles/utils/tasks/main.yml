@@ -1,0 +1,7 @@
+---
+- name: install utils
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ utils }}"

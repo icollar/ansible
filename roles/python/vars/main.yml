@@ -1,0 +1,24 @@
+---
+dependency:
+  apt:
+    - python-dev
+    - python-pip
+    - python-wnck
+    - python-xlib
+    - libpython2.7-dev
+
+  pip:
+    - pip
+    - setuptools
+    - Jinja2
+    - PyYAML
+    - mkdocs
+    - pdfkit
+    - pep8
+    - pexpect
+    - pylint
+    - pytz
+    - requests
+    - semantic-version
+    - wget
+    - enum

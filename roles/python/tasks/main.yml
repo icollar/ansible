@@ -1,0 +1,24 @@
+- name: install python dependencies
+  become: yes
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ dependency.apt }}"
+
+- name: pip install
+  become: yes
+  pip:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ dependency.pip }}"
+
+- name: add .pystartup
+  copy:
+    src: pystartup
+    dest: "{{ ansible_user_dir }}/.pystartup"
+
+- name: add to .bashrc
+  lineinfile:
+    dest: "{{ ansible_user_dir }}/.bashrc"
+    regexp: "^export PYTHONSTARTUP=.*"
+    line: "export PYTHONSTARTUP=~/.pystartup"

@@ -1,0 +1,11 @@
+---
+dependency:
+  apt:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+    - docker-engine
+
+compose:
+  version: 1.8.1

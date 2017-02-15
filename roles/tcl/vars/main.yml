@@ -1,0 +1,13 @@
+---
+utils:
+  - git
+  - rlwrap
+  - tcllib
+  - tdom
+  - tcl-tls
+  - tclxml
+  - tclxml-dev
+  - tcl-dev
+  - autoconf
+  - libyajl-dev
+  - libxml2-utils

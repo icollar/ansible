@@ -1,0 +1,39 @@
+# Ignore duplicates and sucessive entries
+export HISTCONTROL=ignoredups   # ignore duplicate commands
+export HISTCONTROL=ignoreboth   # ignore duplicate commands
+export HISTCONTROL=ignorespace  # ignore commands preceded with a space
+export HISTCONTROL=erasedups    # erase duplicate commands
+export HISTTIMEFORMAT="%D %T "  # History Format
+export HISTSIZE=-1              # unlimited history size
+export HISTFILESIZE=-1          # unlimited history size
+export HISTIGNORE="cd:go_back:go_forward"
+
+# Append bash commands to history immediately
+export PROMPT_COMMAND='history -a'
+
+# check window size after cmds, update LINES/COLUMNS values if nessacary
+shopt -s checkjobs      # Warn if there are stopped jobs when exiting - May not work on all versions.
+shopt -s checkwinsize   # Terminal wraps lines correctly after resizing
+shopt -s histappend     # Append terminal history on exit
+shopt -s cmdhist        # Try to save all multi-line commands to one history entry.
+shopt -s expand_aliases # Self Explainatory
+shopt -s hostcomplete   # Complete hostnames (TAB).
+shopt -s cdspell        # Try to correct spelling errors in the cd command
+shopt -s dirspell       # Try to correct spelling errors for glob matchin
+
+export EDITOR='vim -X'
+export DISPLAY=:0.0
+export LANG=C
+export GITDIR=${HOME}/code/git
+export CVSDIR=${HOME}/code/cvs
+export DEVDIR=${HOME}/dev
+export GIT_DEV_DIR=${DEV_DIR}
+export CVS_DEV_DIR=${DEV_DIR}
+
+if [ -d "${GITDIR}/icollar/scripts" ]; then
+  for script in ${GITDIR}/icollar/scripts/bash/*; do
+    source $script
+  done
+fi
+
+# vim:ft=sh:

@@ -23,6 +23,7 @@ utils:
   - tcl-dev
   - autoconf
   - libyajl-dev
+  - libxml2
   - libxml2-utils
   - rpm
   - unity-tweak-tool
